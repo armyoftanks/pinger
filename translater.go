@@ -46,9 +46,9 @@ func main () {
 	urlStr := "https://translation.googleapis.com/language/translate/v2"
 
 	msgData := url.Values{}
-	msgData.Set("Target", os.Args[1])
-	msgData.Set("Body", os.Args[2])
-	msgData.Set("Model", "nmt")
+	msgData.Set("target", os.Args[1])
+	msgData.Set("q", os.Args[2])
+	msgData.Set("model", "nmt")
 	msgData.Set("source", "en")
 	msgDataReader := *strings.NewReader(msgData.Encode())
 
@@ -63,13 +63,13 @@ func main () {
 		decoder := json.NewDecoder(resp.Body)
 		err := decoder.Decode(&data)
 		if (err == nil) {
-			fmt.Println(data["sid"])
+			fmt.Println(data)
 		}
 	} else {
 		fmt.Println(resp.Status);
 	}
 
-	// TWILIO
+	/* TWILIO
 
 	accountSid := "xxxx"
 	authToken := "xxxx"
@@ -100,5 +100,8 @@ func main () {
 	} else {
 		fmt.Println(resp2.Status);
 	}
+
+
+*/
 
 }
