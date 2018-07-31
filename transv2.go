@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"encoding/json"
 	"fmt"
+	"https://www.googleapis.com/auth/cloud-translation"
 )
 
 /*
@@ -16,28 +17,58 @@ OBJECTIVE: TEXT YOUR FRIENDS IN A DIFF LANGUAGE
 3. SEND MESSAGE TO FRIENDS
 */
 
+type q struct {
+	q string
+}
+
+type target struct {
+	target string
+}
+
+type source struct {
+	source string
+}
+
+type key struct {
+	API_KEY string
+}
+
+type data struct {
+	q q
+	target target
+	source source
+}
 
 
 func main () {
-	// ME ATTEMPTING SOMETHING
+	// ME ATTEMPTING SOMETHING post + http + query parameters
 	// YOU NEED TO CREATE AN HTTP REQUEST WITH URL QUERY STRINGS OF THE TRANSLATE TYPES SPECIFIED I THINK
-
+	gparameters := &data {
+		q : os.Args[1],
+		target : os.Args[2],
+		source : "en",
+	}
 	// GOOGLE TRANSLATE
 
 	urlStr := "https://translation.googleapis.com/language/translate/v2"
 
-	msgData := url.Values{}
-	msgData.Set("target", os.Args[1])
-	msgData.Set("q", os.Args[2])
-	msgData.Set("model", "nmt")
-	msgData.Set("source", "en")
-	msgData.Set("key", "f4c5c971cc1b3caef19232522981649207d438de")
-	msgDataReader := *strings.NewReader(msgData.Encode())
+	msgDataReader := *strings.NewReader(gparameters.Encode())
 
 	client := &http.Client{}
 
-	req, _ := http.NewRequest("POST", urlStr, &msgDataReader)
+	func POST(
+		"https://translation.googleapis.com/language/translate/v2",
+		"application/json",
+
+	)
+
+	/*
 	req.Header.Add("Accept", "application/json")
+	req.Header.Add("key", "xxxx")
+	req.Header.Add("target", os.Args[2])
+	req.Header.Add("source", "en")
+	req.Header.Add("model", "nmt")
+	*/
 
 	resp, _ := client.Do(req)
 	if (resp.StatusCode >= 200 && resp.StatusCode < 300) {
