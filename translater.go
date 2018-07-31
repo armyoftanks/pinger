@@ -26,7 +26,7 @@ func main() {
 	}
 
 	text := os.Args[1]
-	target, errs := language.Parse("ro")
+	target, errs := language.Parse("ru")
 	if errs != nil {
 		log.Fatalf("Failed to parse target language: %v", errs)
 	}
@@ -69,6 +69,6 @@ func main() {
 			fmt.Println(data["sid"])
 		}
 	} else {
-		fmt.Println(resp.Status);
+		fmt.Println(resp);
 	}
 }
