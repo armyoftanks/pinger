@@ -3,11 +3,9 @@ package main
 import (
 	"net/url"
 	"os"
-	"strings"
 	"net/http"
 	"encoding/json"
 	"fmt"
-	"https://www.googleapis.com/auth/cloud-translation"
 )
 
 /*
@@ -17,70 +15,28 @@ OBJECTIVE: TEXT YOUR FRIENDS IN A DIFF LANGUAGE
 3. SEND MESSAGE TO FRIENDS
 */
 
-type q struct {
-	q string
-}
-
-type target struct {
-	target string
-}
-
-type source struct {
-	source string
-}
-
-type key struct {
-	API_KEY string
-}
-
-type data struct {
-	q q
-	target target
-	source source
-}
-
 
 func main () {
 	// ME ATTEMPTING SOMETHING post + http + query parameters
 	// YOU NEED TO CREATE AN HTTP REQUEST WITH URL QUERY STRINGS OF THE TRANSLATE TYPES SPECIFIED I THINK
-	gparameters := &data {
-		q : os.Args[1],
-		target : os.Args[2],
-		source : "en",
-	}
 	// GOOGLE TRANSLATE
 
-	urlStr := "https://translation.googleapis.com/language/translate/v2"
+	gparameters := url.Values{}
+	gparameters.Add("q", os.Args[1])
+	gparameters.Add("target", os.Args[2])
+	gparameters.Add("source", "en")
+	msgDataReader, _ := NewRequest(POST, "https://translation.googleapis.com/language/translate/v2" + gparameters.Encode(), "application/json", nil)
 
-	msgDataReader := *strings.NewReader(gparameters.Encode())
-
-	client := &http.Client{}
-
-	func POST(
-		"https://translation.googleapis.com/language/translate/v2",
-		"application/json",
-
-	)
-
-	/*
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("key", "xxxx")
-	req.Header.Add("target", os.Args[2])
-	req.Header.Add("source", "en")
-	req.Header.Add("model", "nmt")
-	*/
-
-	resp, _ := client.Do(req)
-	if (resp.StatusCode >= 200 && resp.StatusCode < 300) {
+	if (msgDataReader.StatusCode >= 200 && msgDataReader.StatusCode < 300) {
 		var data map[string]interface{}
-		decoder := json.NewDecoder(resp.Body)
+		decoder := json.NewDecoder(msgDataReader.Body)
 		err := decoder.Decode(&data)
 		if (err == nil) {
 			fmt.Println(data)
 		}
 	} else {
-		fmt.Println(resp);
-		fmt.Println(resp.Body)
+		fmt.Println(msgDataReader);
+		fmt.Println(msgDataReader.Body)
 	}
 
 	/* TWILIO
