@@ -1,11 +1,11 @@
 package main
 
 import (
-	"net/url"
-	"os"
 	"net/http"
-	"encoding/json"
+	"net/url"
+	"log"
 	"fmt"
+	"encoding/json"
 )
 
 /*
@@ -15,27 +15,34 @@ OBJECTIVE: TEXT YOUR FRIENDS IN A DIFF LANGUAGE
 3. SEND MESSAGE TO FRIENDS
 */
 
+
 func main () {
 	// ME ATTEMPTING SOMETHING post + http + query parameters
 	// YOU NEED TO CREATE AN HTTP REQUEST WITH URL QUERY STRINGS OF THE TRANSLATE TYPES SPECIFIED I THINK
 	// GOOGLE TRANSLATE
-
+	client := &http.Client{}
 	gparameters := url.Values{}
-	gparameters.Add("q", os.Args[1])
-	gparameters.Add("target", os.Args[2])
+	gparameters.Add("q", "hello world")
+	gparameters.Add("target", "ru")
 	gparameters.Add("source", "en")
-	msgDataReader, _ := NewRequest(POST, "https://translation.googleapis.com/language/translate/v2" + gparameters.Encode(), "application/json", nil)
+	msgDataReader,_ := http.NewRequest("POST", "https://translation.googleapis.com/language/translate/v2" + gparameters.Encode(), nil)
+	msgDataReader.Header.Add("content-type", "application/json")
 
-	if (msgDataReader.StatusCode >= 200 && msgDataReader.StatusCode < 300) {
+	resp, err := client.Do(msgDataReader)
+	if err != nil{
+		log.Fatalf("Failed to translate text: %v", err)
+	}
+	fmt.Println(resp)
+
+	if (resp.StatusCode >= 200 && resp.StatusCode < 300) {
 		var data map[string]interface{}
-		decoder := json.NewDecoder(msgDataReader.Body)
-		err := decoder.Decode(&data)
-		if (err == nil) {
-			fmt.Println(data)
+		decoder := json.NewDecoder(resp.Body)
+		err2 := decoder.Decode(&data)
+		if (err2 == nil) {
+			fmt.Println(data["sid"])
 		}
 	} else {
-		fmt.Println(msgDataReader);
-		fmt.Println(msgDataReader.Body)
+		fmt.Println(resp.Status);
 	}
 
 	/* TWILIO
