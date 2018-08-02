@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"log"
 	"fmt"
-	"encoding/json"
+	//"encoding/json"
 )
 
 /*
@@ -25,8 +25,8 @@ func main () {
 	gparameters.Add("q", "hello world")
 	gparameters.Add("target", "ru")
 	gparameters.Add("source", "en")
-	msgDataReader,_ := http.NewRequest("POST", "https://translation.googleapis.com/language/translate/v2" + gparameters.Encode(), nil)
-	msgDataReader.Header.Add("content-type", "application/json")
+	gparameters.Add("key", "f4c5c971cc1b3caef19232522981649207d438de	")
+	msgDataReader,_ := http.Post("https://translation.googleapis.com/language/translate/v2?" + gparameters.Encode(), "application/json", nil)
 
 	resp, err := client.Do(msgDataReader)
 	if err != nil{
@@ -34,16 +34,6 @@ func main () {
 	}
 	fmt.Println(resp)
 
-	if (resp.StatusCode >= 200 && resp.StatusCode < 300) {
-		var data map[string]interface{}
-		decoder := json.NewDecoder(resp.Body)
-		err2 := decoder.Decode(&data)
-		if (err2 == nil) {
-			fmt.Println(data["sid"])
-		}
-	} else {
-		fmt.Println(resp.Status);
-	}
 
 	/* TWILIO
 	accountSid := "xxxx"
