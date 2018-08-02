@@ -3,9 +3,10 @@ package main
 import (
 	"net/http"
 	"net/url"
-	"log"
 	"fmt"
 	//"encoding/json"
+	"io/ioutil"
+
 )
 
 /*
@@ -20,19 +21,16 @@ func main () {
 	// ME ATTEMPTING SOMETHING post + http + query parameters
 	// YOU NEED TO CREATE AN HTTP REQUEST WITH URL QUERY STRINGS OF THE TRANSLATE TYPES SPECIFIED I THINK
 	// GOOGLE TRANSLATE
-	client := &http.Client{}
 	gparameters := url.Values{}
 	gparameters.Add("q", "hello world")
 	gparameters.Add("target", "ru")
 	gparameters.Add("source", "en")
-	gparameters.Add("key", "f4c5c971cc1b3caef19232522981649207d438de	")
-	msgDataReader,_ := http.Post("https://translation.googleapis.com/language/translate/v2?" + gparameters.Encode(), "application/json", nil)
+	gparameters.Add("key", "AIzaSyC2T4mOaf1v-Hi0wd7Ow4Qaa7E7wlmIAo0")
+	resp,_:= http.Post("https://translation.googleapis.com/language/translate/v2?" + gparameters.Encode(), "application/json", nil)
 
-	resp, err := client.Do(msgDataReader)
-	if err != nil{
-		log.Fatalf("Failed to translate text: %v", err)
-	}
-	fmt.Println(resp)
+	responseText, _ := ioutil.ReadAll(resp.Body)
+	fmt.Println(string(responseText))
+
 
 
 	/* TWILIO
