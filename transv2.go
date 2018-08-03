@@ -8,6 +8,8 @@ import (
 	"io/ioutil"
 
 	"os"
+	"strings"
+	"encoding/json"
 )
 
 /*
@@ -33,15 +35,14 @@ func main () {
 	fmt.Println(string(responseText))
 
 
-
-	/* TWILIO
+	//TWILIO
 	accountSid := "xxxx"
-	authToken := "xxxx"
+	authToken := "xxxxx"
 	urlStr2 := "https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json"
 	msgData2 := url.Values{}
-	msgData2.Set("To", os.Args[1])
-	msgData2.Set("From","xxxx")
-	msgData2.Set("Body", os.Args[2])  // <---  I WANT TO REPLACE THIS WITH THE TRANSLATED TEXT FROM GOOGLE TRANSLATE RESPONSE ABOVE
+	msgData2.Set("To", os.Args[3])
+	msgData2.Set("From",	"xxxx")
+	msgData2.Set("Body", os.Args[1])
 	msgDataReader2 := *strings.NewReader(msgData2.Encode())
 	client2 := &http.Client{}
 	req2, _ := http.NewRequest("POST", urlStr2, &msgDataReader2)
@@ -59,6 +60,5 @@ func main () {
 	} else {
 		fmt.Println(resp2.Status);
 	}
-*/
 
 }
