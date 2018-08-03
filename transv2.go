@@ -4,31 +4,44 @@ import (
 	"net/http"
 	"net/url"
 	"fmt"
-	//"encoding/json"
 	"io/ioutil"
-
 	"os"
 	"strings"
 	"encoding/json"
 )
 
 /*
-OBJECTIVE: TEXT YOUR FRIENDS IN A DIFF LANGUAGE
-1. SEND MESSAGE TO GOOGLE TRANSLATE
-2. RECEIVE TRANSLATION AND STORE INTO MESSAGE
-3. SEND MESSAGE TO FRIENDS
+OBJECTIVE: TEXT YOUR FRIENDS A RANDOM CHUCK NORRIS JOKE IN A DIFF LANGUAGE
+1. GET RANDOM CHUCK NORRIS JOKE
+2. TRANSLATE JOKE TO WHATEVER LANGUAGE YOU CHOOSE
+3. SEND TRANSLATED JOKE AS MESSAGE TO FRIENDS
 */
 
+type joker string
 
 func main () {
-	// ME ATTEMPTING SOMETHING post + http + query parameters
-	// YOU NEED TO CREATE AN HTTP REQUEST WITH URL QUERY STRINGS OF THE TRANSLATE TYPES SPECIFIED I THINK
-	// GOOGLE TRANSLATE
+	//CHUCK NORRIS RANDOM JOKE API
+	res,_ := http.Get("https://api.chucknorris.io/jokes/random")
+	if (res.StatusCode >= 200 && res.StatusCode < 300) {
+		var data map[string]interface{}
+		decoder := json.NewDecoder(res.Body)
+		err := decoder.Decode(&data)
+		if (err == nil) {
+			fmt.Println(data["value"])
+		}
+	} else {
+		fmt.Println(res.Status);
+	}
+
+	joke,_ := ioutil.ReadAll(res.Body)
+
+
+	// GOOGLE TRANSLATE API TRANSLATING CHUCK NORRIS JOKE
 	gparameters := url.Values{}
-	gparameters.Add("q", os.Args[1])
-	gparameters.Add("target", os.Args[2])
+	gparameters.Add("q", string(joke))
+	gparameters.Add("target", os.Args[1])
 	gparameters.Add("source", "en")
-	gparameters.Add("key", "xxxx")
+	gparameters.Add("key", "AIzaSyC2T4mOaf1v-Hi0wd7Ow4Qaa7E7wlmIAo0")
 	resp,_:= http.Post("https://translation.googleapis.com/language/translate/v2?" + gparameters.Encode(), "application/json", nil)
 
 	responseText, _ := ioutil.ReadAll(resp.Body)
@@ -36,13 +49,13 @@ func main () {
 
 
 	//TWILIO
-	accountSid := "xxxx"
-	authToken := "xxxxx"
+	accountSid := "ACef8a6e9c53ddeb566318028c02b9fca9"
+	authToken := "8ea795fab7df907a6f29d2ff2c9d850c"
 	urlStr2 := "https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json"
 	msgData2 := url.Values{}
-	msgData2.Set("To", os.Args[3])
-	msgData2.Set("From",	"xxxx")
-	msgData2.Set("Body", os.Args[1])
+	msgData2.Set("To", os.Args[2])
+	msgData2.Set("From",	"+19177228447")
+	msgData2.Set("Body", string(responseText))
 	msgDataReader2 := *strings.NewReader(msgData2.Encode())
 	client2 := &http.Client{}
 	req2, _ := http.NewRequest("POST", urlStr2, &msgDataReader2)
