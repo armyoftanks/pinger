@@ -41,7 +41,7 @@ func main () {
 	gparameters.Add("q", string(joke))
 	gparameters.Add("target", os.Args[1])
 	gparameters.Add("source", "en")
-	gparameters.Add("key", "AIzaSyC2T4mOaf1v-Hi0wd7Ow4Qaa7E7wlmIAo0")
+	gparameters.Add("key", "xxxxx")
 	resp,_:= http.Post("https://translation.googleapis.com/language/translate/v2?" + gparameters.Encode(), "application/json", nil)
 
 	responseText, _ := ioutil.ReadAll(resp.Body)
@@ -49,12 +49,12 @@ func main () {
 
 
 	//TWILIO
-	accountSid := "ACef8a6e9c53ddeb566318028c02b9fca9"
-	authToken := "8ea795fab7df907a6f29d2ff2c9d850c"
+	accountSid := "xxxxx"
+	authToken := "xxxxx"
 	urlStr2 := "https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json"
 	msgData2 := url.Values{}
 	msgData2.Set("To", os.Args[2])
-	msgData2.Set("From",	"+19177228447")
+	msgData2.Set("From",	"xxxxx")
 	msgData2.Set("Body", string(responseText))
 	msgDataReader2 := *strings.NewReader(msgData2.Encode())
 	client2 := &http.Client{}
