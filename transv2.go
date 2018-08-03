@@ -7,6 +7,7 @@ import (
 	//"encoding/json"
 	"io/ioutil"
 
+	"os"
 )
 
 /*
@@ -22,10 +23,10 @@ func main () {
 	// YOU NEED TO CREATE AN HTTP REQUEST WITH URL QUERY STRINGS OF THE TRANSLATE TYPES SPECIFIED I THINK
 	// GOOGLE TRANSLATE
 	gparameters := url.Values{}
-	gparameters.Add("q", "hello world")
-	gparameters.Add("target", "ru")
+	gparameters.Add("q", os.Args[1])
+	gparameters.Add("target", os.Args[2])
 	gparameters.Add("source", "en")
-	gparameters.Add("key", "AIzaSyC2T4mOaf1v-Hi0wd7Ow4Qaa7E7wlmIAo0")
+	gparameters.Add("key", "xxxx")
 	resp,_:= http.Post("https://translation.googleapis.com/language/translate/v2?" + gparameters.Encode(), "application/json", nil)
 
 	responseText, _ := ioutil.ReadAll(resp.Body)
