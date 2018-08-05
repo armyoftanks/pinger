@@ -48,7 +48,7 @@ func main () {
 	fmt.Println(string(responseText))
 
 
-	//TWILIO
+	//TWILIO API SENDING TEXT MESSAGE OF TRANSLATED CHUCK NORRIS JOKE TO FRIENDS
 	accountSid := "xxxxx"
 	authToken := "xxxxx"
 	urlStr2 := "https://api.twilio.com/2010-04-01/Accounts/" + accountSid + "/Messages.json"
