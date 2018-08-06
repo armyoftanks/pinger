@@ -27,7 +27,7 @@ type TranslationResponse struct {
 }
 
 // Config (context) struct
-type licences struct {
+type appConfig struct {
 	TranslateApiKey string
 	TwilioAccountSid string
 	TwilioAuthToken string
@@ -35,7 +35,7 @@ type licences struct {
 }
 
 // global config data
-var gLicences *licences = &licences{}
+var globalConfig *appConfig = &appConfig{}
 
 // using: https://api.chucknorris.io/
 func getJoke() (string, error) {
@@ -144,10 +144,10 @@ func main() {
 	jokeLanguage := os.Args[2]
 
 	// set program global config variables
-	globalConfig.TranslateApiKey = os.Args[3]
-	globalConfig.TwilioAccountSid = os.Args[4]
-	globalConfig.TwilioAuthToken = os.Args[5]
-	globalConfig.TwilioFromNumber = os.Args[6]
+	globalConfig.TranslateApiKey = "AIzaSyC2T4mOaf1v-Hi0wd7Ow4Qaa7E7wlmIAo0"
+	globalConfig.TwilioAccountSid = "AC23bbf50c76e5dab51bd28d226f64833c"
+	globalConfig.TwilioAuthToken = "859e6a844815d8c7b1d5adbc1d014ec6"
+	globalConfig.TwilioFromNumber = "+19179092312"
 
 	log.Println("To: " + phoneNumber + " From: " + globalConfig.TwilioFromNumber + " in: "+ jokeLanguage)
 
