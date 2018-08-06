@@ -27,7 +27,7 @@ type TranslationResponse struct {
 }
 
 // Config (context) struct
-type appConfig struct {
+type licences struct {
 	TranslateApiKey string
 	TwilioAccountSid string
 	TwilioAuthToken string
@@ -35,7 +35,7 @@ type appConfig struct {
 }
 
 // global config data
-var globalConfig *appConfig = &appConfig{}
+var gLicences *licences = &licences{}
 
 // using: https://api.chucknorris.io/
 func getJoke() (string, error) {
