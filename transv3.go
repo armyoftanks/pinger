@@ -9,6 +9,7 @@ import (
 	"errors"
 	"net/url"
 	"strings"
+	"math/rand"
 )
 
 // TRANSLATE API TYPES
@@ -36,6 +37,39 @@ type appConfig struct {
 
 // global config data
 var globalConfig *appConfig = &appConfig{}
+
+//RICK AND MORTY TRIVIA https://rickandmortyapi.com/api/
+//GOING TO GET A RANDOM LOCATION FROM https://rickandmortyapi.com/api/location/
+
+type id int
+type name string
+type type string
+type dimention string
+type residents  []string
+type url string
+type created string
+
+type ricksRandomLocation struct {
+
+}
+
+func randomLocation() (int) {
+	rand := 100 * (float32())
+	if rand > 76 {
+		rand = rand - 76
+	}
+
+	return rand
+}
+
+func ricksLocation() (string, error) {
+	res, err := http.Get("https://rickandmortyapi.com/api/location/" + randomLocation())
+	if err != nil {
+		return "", err
+	}
+
+	return ricksRandomLocation
+}
 
 // using: https://api.chucknorris.io/
 func getJoke() (string, error) {
