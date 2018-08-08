@@ -144,10 +144,10 @@ func main() {
 	jokeLanguage := os.Args[2]
 
 	// set program global config variables
-	globalConfig.TranslateApiKey = "AIzaSyC2T4mOaf1v-Hi0wd7Ow4Qaa7E7wlmIAo0"
-	globalConfig.TwilioAccountSid = "AC23bbf50c76e5dab51bd28d226f64833c"
-	globalConfig.TwilioAuthToken = "859e6a844815d8c7b1d5adbc1d014ec6"
-	globalConfig.TwilioFromNumber = "+19179092312"
+	globalConfig.TranslateApiKey = "xxxx"
+	globalConfig.TwilioAccountSid = "xxxx"
+	globalConfig.TwilioAuthToken = "xxxx"
+	globalConfig.TwilioFromNumber = "xxxx"
 
 	log.Println("To: " + phoneNumber + " From: " + globalConfig.TwilioFromNumber + " in: "+ jokeLanguage)
 
