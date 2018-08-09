@@ -1,22 +1,23 @@
 package main
 
 import (
-	"log"
-	"os"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
 	"errors"
-	"net/url"
-	"strings"
+	"io/ioutil"
+	"log"
 	"math/rand"
+	"net/http"
+	"net/url"
+	"os"
+	"strconv"
+	"strings"
 )
 
 // TRANSLATE API TYPES
 type TranslateTextResponseTranslation struct {
 	DetectedSourceLanguage string `json:"detectedSourceLanguage"`
-	Model string `json:"model"`
-	TranslatedText string `json:"translatedText"`
+	Model                  string `json:"model"`
+	TranslatedText         string `json:"translatedText"`
 }
 
 type TranslateTextResponseList struct {
@@ -29,9 +30,9 @@ type TranslationResponse struct {
 
 // Config (context) struct
 type appConfig struct {
-	TranslateApiKey string
+	TranslateApiKey  string
 	TwilioAccountSid string
-	TwilioAuthToken string
+	TwilioAuthToken  string
 	TwilioFromNumber string
 }
 
@@ -41,34 +42,33 @@ var globalConfig *appConfig = &appConfig{}
 //RICK AND MORTY TRIVIA https://rickandmortyapi.com/api/
 //GOING TO GET A RANDOM LOCATION FROM https://rickandmortyapi.com/api/location/
 
-type id int
-type name string
-type type string
-type dimention string
-type residents  []string
-type url string
-type created string
-
 type ricksRandomLocation struct {
-
-}
-
-func randomLocation() (int) {
-	rand := 100 * (float32())
-	if rand > 76 {
-		rand = rand - 76
-	}
-
-	return rand
+	name      string `json:"name"`
+	dimention string `json:"dimention"`
 }
 
 func ricksLocation() (string, error) {
-	res, err := http.Get("https://rickandmortyapi.com/api/location/" + randomLocation())
+	res, err := http.Get("https://rickandmortyapi.com/api/location/" + strconv.Itoa(rand.Intn(76)))
 	if err != nil {
 		return "", err
 	}
 
-	return ricksRandomLocation
+	location, err := ioutil.ReadAll(res.Body)
+	res.Body.Close()
+	if err != nil {
+		return "", err
+	}
+
+	var rickObj map[string]string
+
+	json.Unmarshal(location, &rickObj)
+	if len(rickObj["name"]) <= 0 {
+		return "", errors.New("Failed to parse rick object")
+	}
+
+	// return the location
+	return rickObj["name"], nil
+
 }
 
 // using: https://api.chucknorris.io/
@@ -91,7 +91,7 @@ func getJoke() (string, error) {
 	log.Println("Received Response: " + string(joke))
 
 	// extract the joke string from the response json object
-	var jokeObj map [string]string
+	var jokeObj map[string]string
 
 	// we can unmarshal this object as a map of string: string because the documentation tells us
 	// that the response object is formatted in this way - otherwise, if you don't know the format
@@ -106,15 +106,15 @@ func getJoke() (string, error) {
 }
 
 // google translate request
-func translateJoke(text string,	language string) (string, error) {
+func translateJoke(text string, language string) (string, error) {
 	queryParameters := &url.Values{
-		"q": {text},
+		"q":      {text},
 		"target": {language},
 		"format": {"text"},
-		"key": {globalConfig.TranslateApiKey},
+		"key":    {globalConfig.TranslateApiKey},
 	}
 
-	res, err := http.Post("https://translation.googleapis.com/language/translate/v2?" +
+	res, err := http.Post("https://translation.googleapis.com/language/translate/v2?"+
 		queryParameters.Encode(), "", nil)
 
 	if err != nil {
@@ -140,14 +140,14 @@ func translateJoke(text string,	language string) (string, error) {
 
 // Twilio request
 func sendJoke(phoneNumber string, message string) error {
-	twilioParams := &url.Values {
-		"To": {phoneNumber},
+	twilioParams := &url.Values{
+		"To":   {phoneNumber},
 		"From": {globalConfig.TwilioFromNumber},
 		"Body": {message},
 	}
 
-	req, err := http.NewRequest("POST", "https://api.twilio.com/2010-04-01/Accounts/" +
-		globalConfig.TwilioAccountSid + "/Messages.json", strings.NewReader(twilioParams.Encode()))
+	req, err := http.NewRequest("POST", "https://api.twilio.com/2010-04-01/Accounts/"+
+		globalConfig.TwilioAccountSid+"/Messages.json", strings.NewReader(twilioParams.Encode()))
 
 	if err != nil {
 		return err
@@ -183,13 +183,13 @@ func main() {
 	globalConfig.TwilioAuthToken = "xxxx"
 	globalConfig.TwilioFromNumber = "xxxx"
 
-	log.Println("To: " + phoneNumber + " From: " + globalConfig.TwilioFromNumber + " in: "+ jokeLanguage)
+	log.Println("To: " + phoneNumber + " From: " + globalConfig.TwilioFromNumber + " in: " + jokeLanguage)
 
 	var joke, translatedJoke string
 	var err error
 
 	// Get a joke
-	joke, err = getJoke();
+	joke, err = getJoke()
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -203,7 +203,7 @@ func main() {
 	}
 
 	log.Println("Received Translation: " + translatedJoke)
-
+	log.Println("Ricks current location: " + ricksLocation())
 	// Send the joke in an SMS
 	err = sendJoke(phoneNumber, translatedJoke)
 	if err != nil {
