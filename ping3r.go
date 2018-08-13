@@ -65,6 +65,8 @@ import (
 
 /*   TEXTING API HERE
 
+https://textbelt.com/
+
 THIS IS JAVA TURN IT INTO GO
 
 final NameValuePair[] data = {
