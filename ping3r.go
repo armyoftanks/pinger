@@ -1,5 +1,8 @@
 package main
 
+import (
+)
+
 /*
   Deep breath.... ok so, I want you to use at least 3 services from https://github.com/abhishekbanthia/Public-APIs
 
@@ -46,7 +49,47 @@ package main
       no auth
       http basic auth
       authorization key via post or query param
+
+  OPTIONS / IDEAS:
+    Dictionary API
+    NASA api?
+    Rick and Morty Trivia
+    Free texting APIs
+
+    create a personal bot that listens for a request for information
+    bot will respond to "wheres rick" to get a random location for Rick
+    bot will respond to "nasa news" to get the latest news string from nasa
+    bot will respond to "define" + user input <-- which will be a single word to define, the bot will respond with a definition if one exists.
+    all 3 APIs connected to a message relay service (do i need a database for this?)
 */
+
+/*   TEXTING API HERE
+
+THIS IS JAVA TURN IT INTO GO
+
+final NameValuePair[] data = {
+    new BasicNameValuePair("phone", "5557727420"),
+    new BasicNameValuePair("message", "Hello world"),
+    new BasicNameValuePair("key", "textbelt")
+};
+HttpClient httpClient = HttpClients.createMinimal();
+HttpPost httpPost = new HttpPost("https://textbelt.com/text");
+httpPost.setEntity(new UrlEncodedFormEntity(Arrays.asList(data)));
+HttpResponse httpResponse = httpClient.execute(httpPost);
+
+String responseString = EntityUtils.toString(httpResponse.getEntity());
+JSONObject response = new JSONObject(responseString);
+*/
+
+type BasicNameValuePair struct {
+  phone string 'json: "phone"'
+  message string 'json: "message"'
+  key string 'json: "key"'
+}
+
+type NameValuePair struct {
+  data BasicNameValuePair 'json: "data"'
+}
 
 func main() {
 
