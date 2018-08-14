@@ -1,21 +1,21 @@
 package main
 
 import (
-	"log"
-	"os"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"net/url"
+	"os"
 	"strings"
 )
 
 // TRANSLATE API TYPES
 type TranslateTextResponseTranslation struct {
 	DetectedSourceLanguage string `json:"detectedSourceLanguage"`
-	Model string `json:"model"`
-	TranslatedText string `json:"translatedText"`
+	Model                  string `json:"model"`
+	TranslatedText         string `json:"translatedText"`
 }
 
 type TranslateTextResponseList struct {
@@ -28,9 +28,9 @@ type TranslationResponse struct {
 
 // Config (context) struct
 type appConfig struct {
-	TranslateApiKey string
+	TranslateApiKey  string
 	TwilioAccountSid string
-	TwilioAuthToken string
+	TwilioAuthToken  string
 	TwilioFromNumber string
 }
 
@@ -57,7 +57,7 @@ func getJoke() (string, error) {
 	log.Println("Received Response: " + string(joke))
 
 	// extract the joke string from the response json object
-	var jokeObj map [string]string
+	var jokeObj map[string]string
 
 	// we can unmarshal this object as a map of string: string because the documentation tells us
 	// that the response object is formatted in this way - otherwise, if you don't know the format
@@ -72,15 +72,15 @@ func getJoke() (string, error) {
 }
 
 // google translate request
-func translateJoke(text string,	language string) (string, error) {
+func translateJoke(text string, language string) (string, error) {
 	queryParameters := &url.Values{
-		"q": {text},
+		"q":      {text},
 		"target": {language},
 		"format": {"text"},
-		"key": {globalConfig.TranslateApiKey},
+		"key":    {globalConfig.TranslateApiKey},
 	}
 
-	res, err := http.Post("https://translation.googleapis.com/language/translate/v2?" +
+	res, err := http.Post("https://translation.googleapis.com/language/translate/v2?"+
 		queryParameters.Encode(), "", nil)
 
 	if err != nil {
@@ -106,14 +106,14 @@ func translateJoke(text string,	language string) (string, error) {
 
 // Twilio request
 func sendJoke(phoneNumber string, message string) error {
-	twilioParams := &url.Values {
-		"To": {phoneNumber},
+	twilioParams := &url.Values{
+		"To":   {phoneNumber},
 		"From": {globalConfig.TwilioFromNumber},
 		"Body": {message},
 	}
 
-	req, err := http.NewRequest("POST", "https://api.twilio.com/2010-04-01/Accounts/" +
-		globalConfig.TwilioAccountSid + "/Messages.json", strings.NewReader(twilioParams.Encode()))
+	req, err := http.NewRequest("POST", "https://api.twilio.com/2010-04-01/Accounts/"+
+		globalConfig.TwilioAccountSid+"/Messages.json", strings.NewReader(twilioParams.Encode()))
 
 	if err != nil {
 		return err
@@ -144,18 +144,18 @@ func main() {
 	jokeLanguage := os.Args[2]
 
 	// set program global config variables
-	globalConfig.TranslateApiKey = "AIzaSyC2T4mOaf1v-Hi0wd7Ow4Qaa7E7wlmIAo0"
-	globalConfig.TwilioAccountSid = "AC23bbf50c76e5dab51bd28d226f64833c"
-	globalConfig.TwilioAuthToken = "859e6a844815d8c7b1d5adbc1d014ec6"
-	globalConfig.TwilioFromNumber = "+19179092312"
+	globalConfig.TranslateApiKey = "xxxx"
+	globalConfig.TwilioAccountSid = "xxxx"
+	globalConfig.TwilioAuthToken = "xxxx"
+	globalConfig.TwilioFromNumber = "xxxx"
 
-	log.Println("To: " + phoneNumber + " From: " + globalConfig.TwilioFromNumber + " in: "+ jokeLanguage)
+	log.Println("To: " + phoneNumber + " From: " + globalConfig.TwilioFromNumber + " in: " + jokeLanguage)
 
 	var joke, translatedJoke string
 	var err error
 
 	// Get a joke
-	joke, err = getJoke();
+	joke, err = getJoke()
 	if err != nil {
 		log.Fatal(err.Error())
 	}

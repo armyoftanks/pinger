@@ -1,7 +1,6 @@
 package main
 
-import (
-)
+import "net/url"
 
 /*
   Deep breath.... ok so, I want you to use at least 3 services from https://github.com/abhishekbanthia/Public-APIs
@@ -83,14 +82,29 @@ String responseString = EntityUtils.toString(httpResponse.getEntity());
 JSONObject response = new JSONObject(responseString);
 */
 
+// Config (context) struct
+type appConfig struct {
+	textbeltKey string
+}
+
+// global config data
+var globalConfig *appConfig = &appConfig{}
+
 type BasicNameValuePair struct {
-  phone string 'json: "phone"'
-  message string 'json: "message"'
-  key string 'json: "key"'
+	phone   string `json: "phone"`
+	message string `json: "message"`
 }
 
 type NameValuePair struct {
-  data BasicNameValuePair 'json: "data"'
+	data BasicNameValuePair `json: "data"`
+}
+
+func sendText(phone string, message string) error {
+	textParams := &url.Values{
+		"phone":   {phone},
+		"message": {message},
+		"key":     {globalConfig.textbeltKey},
+	}
 }
 
 func main() {
