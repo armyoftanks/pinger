@@ -2,8 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -97,16 +97,6 @@ type appConfig struct {
 // global config data
 var globalConfig *appConfig = &appConfig{}
 
-//  *** NOT SURE HOW TO FIT THIS INTO MY sendText FUNCTION ***
-type BasicNameValuePair struct {
-	phone   string `json: "phone"`
-	message string `json: "message"`
-}
-
-type NameValuePair struct {
-	data BasicNameValuePair `json: "data"`
-}
-
 func sendText(phone string, message string) (string, error) {
 	textParams := &url.Values{
 		"phone":   {phone},
@@ -116,7 +106,7 @@ func sendText(phone string, message string) (string, error) {
 
 	resp, err := http.Post("https://textbelt.com/text", textParams.Encode(), nil)
 	if err != nil {
-		log.Fatal(err.Error())
+		fmt.Println(err)
 	}
 
 	textbelt, err := ioutil.ReadAll(resp.Body)
@@ -125,16 +115,14 @@ func sendText(phone string, message string) (string, error) {
 		return "", err
 	}
 
-	var NameValueObj NameValuePair
+	text := json.Unmarshal(textbelt, err)
 
-	json.Unmarshal(textbelt, &NameValueObj)
-
-	return NameValueObj.data.message, err
+	return text
 }
 
 func main() {
 
-	globalConfig.textbeltKey = "xxxx"
+	globalConfig.textbeltKey = "0d7e9422fa274f72104f70668f4f1115755b320a5daLXdU7VFuQp4d5immCS3Won"
 
 	phone := os.Args[1]
 	message := os.Args[2]
