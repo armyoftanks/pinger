@@ -97,7 +97,7 @@ type appConfig struct {
 // global config data
 var globalConfig *appConfig = &appConfig{}
 
-func sendText(phone string, message string) (string, error) {
+func sendText(phone string, message string) {
 	textParams := &url.Values{
 		"phone":   {phone},
 		"message": {message},
@@ -112,12 +112,11 @@ func sendText(phone string, message string) (string, error) {
 	textbelt, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
-		return "", err
+		return
 	}
 
 	text := json.Unmarshal(textbelt, err)
-
-	return text
+	fmt.Println(text)
 }
 
 func main() {
@@ -127,8 +126,6 @@ func main() {
 	phone := os.Args[1]
 	message := os.Args[2]
 
-	resp, err := sendText(phone, message)
-
-	println(resp, err)
+	sendText(phone, message)
 
 }
