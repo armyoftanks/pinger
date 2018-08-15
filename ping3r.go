@@ -122,7 +122,7 @@ func sendText(phone string, message string) (string, error) {
 
 func main() {
 
-	globalConfig.textbeltKey = "0d7e9422fa274f72104f70668f4f1115755b320a5daLXdU7VFuQp4d5immCS3Won"
+	globalConfig.textbeltKey = "xxxx"
 
 	phone := os.Args[1]
 	message := os.Args[2]
