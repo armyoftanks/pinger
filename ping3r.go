@@ -1,9 +1,8 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -97,31 +96,27 @@ type appConfig struct {
 // global config data
 var globalConfig *appConfig = &appConfig{}
 
-func sendText(phone string, message string) {
-	textParams := &url.Values{
-		"phone":   {phone},
-		"message": {message},
-		"key":     {globalConfig.textbeltKey},
-	}
+func sendText(phone string, message string) (string, error) {
 
-	resp, err := http.Post("https://textbelt.com/text", textParams.Encode(), nil)
+	resp, err := http.PostForm("https://textbelt.com/text", url.Values{"phone": {phone}, "message": {message}, "key": {globalConfig.textbeltKey}})
 	if err != nil {
-		fmt.Println(err)
+		return "", err
 	}
 
 	textbelt, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
 	if err != nil {
-		return
+		return "", err
 	}
 
-	text := json.Unmarshal(textbelt, err)
-	fmt.Println(text)
+	log.Println(string(textbelt))
+
+	return string(textbelt), err
 }
 
 func main() {
 
-	globalConfig.textbeltKey = "xxxx"
+	globalConfig.textbeltKey = "textbelt"
 
 	phone := os.Args[1]
 	message := os.Args[2]
