@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -96,6 +98,7 @@ type appConfig struct {
 // global config data
 var globalConfig *appConfig = &appConfig{}
 
+// TEXT BELT API HERE
 func sendText(phone string, message string) (string, error) {
 
 	resp, err := http.PostForm("https://textbelt.com/text", url.Values{"phone": {phone}, "message": {message}, "key": {globalConfig.textbeltKey}})
@@ -114,13 +117,45 @@ func sendText(phone string, message string) (string, error) {
 	return string(textbelt), err
 }
 
+// TEXT BELT API END
+
+// RICK AND MORTY API HERE
+func wheresRick() (string, error) {
+
+	resp, err := http.Get("https://rickandmortyapi.com/api/location/2")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	location, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var rickObj string
+
+	// we can unmarshal this object as a map of string: string because the documentation tells us
+	// that the response object is formatted in this way - otherwise, if you don't know the format
+	// of the response object, you should not make assumptions as to how the data is stored.
+	json.Unmarshal(location, &rickObj)
+	if len(rickObj["name"]) <= 0 {
+		return "", errors.New("Failed")
+	}
+
+	return rickObj["name"], nil
+
+// RICK AND MORTY API END
+
 func main() {
 
-	globalConfig.textbeltKey = "textbelt"
+	globalConfig.textbeltKey = "xxxx"
 
 	phone := os.Args[1]
-	message := os.Args[2]
+	message, err := wheresRick()
 
+	//send text message
 	sendText(phone, message)
 
 }
