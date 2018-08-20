@@ -120,6 +120,7 @@ func sendText(phone string, message string) (string, error) {
 // TEXT BELT API END
 
 // RICK AND MORTY API HERE
+
 func wheresRick() (string, error) {
 
 	resp, err := http.Get("https://rickandmortyapi.com/api/location/2")
@@ -140,11 +141,12 @@ func wheresRick() (string, error) {
 	// that the response object is formatted in this way - otherwise, if you don't know the format
 	// of the response object, you should not make assumptions as to how the data is stored.
 	json.Unmarshal(location, &rickObj)
-	if len(rickObj["name"]) <= 0 {
+	if len(rickObj["value"]) <= 0 {
 		return "", errors.New("Failed")
 	}
 
-	return rickObj["name"], nil
+	return rickObj["value"], nil
+}
 
 // RICK AND MORTY API END
 
