@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -121,31 +120,29 @@ func sendText(phone string, message string) (string, error) {
 
 // RICK AND MORTY API HERE
 
+type locationInfo struct {
+	id        int      `json:"id"`
+	name      string   `json:"name"`
+	types     string   `json:"type"`
+	dimension string   `json:"dimention"`
+	residents []string `json:"residents"`
+}
+
 func wheresRick() (string, error) {
 
 	resp, err := http.Get("https://rickandmortyapi.com/api/location/2")
-
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	location, err := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
+	l := []locationInfo{}
+
+	location, err := json.Unmarshal([]byte(resp), &l)
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
-	var rickObj string
-
-	// we can unmarshal this object as a map of string: string because the documentation tells us
-	// that the response object is formatted in this way - otherwise, if you don't know the format
-	// of the response object, you should not make assumptions as to how the data is stored.
-	json.Unmarshal(location, &rickObj)
-	if len(rickObj["value"]) <= 0 {
-		return "", errors.New("Failed")
-	}
-
-	return rickObj["value"], nil
+	return string(location), nil
 }
 
 // RICK AND MORTY API END
