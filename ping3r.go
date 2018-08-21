@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -126,27 +127,37 @@ type locationInfo struct {
 	types     string         `json:"type"`
 	dimension string         `json:"dimention"`
 	residents []residentList `json:"residents"`
+	url       string         `json:"url"`
+	created   string         `json:"created"`
 }
 
 type residentList struct {
 	residents string
 }
 
-func wheresRick() string {
+func wheresRick() (string, error) {
 
 	resp, err := http.Get("https://rickandmortyapi.com/api/location/2")
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	fmt.Println(resp)
+
 	jsresp, err := ioutil.ReadAll(resp.Body)
 	resp.Body.Close()
+	if err != nil {
+		return "", err
+	}
 
 	var l locationInfo
 
 	json.Unmarshal(jsresp, &l)
+	if err != nil {
+		return "", err
+	}
 
-	return string(l.name)
+	return string(l.name), err
 }
 
 // RICK AND MORTY API END
@@ -156,7 +167,7 @@ func main() {
 	globalConfig.textbeltKey = "textbelt"
 
 	phone := os.Args[1]
-	message := wheresRick()
+	message, _ := wheresRick()
 
 	//send text message
 	sendText(phone, message)
