@@ -121,44 +121,42 @@ func sendText(phone string, message string) (string, error) {
 // RICK AND MORTY API HERE
 
 type locationInfo struct {
-	id        int      `json:"id"`
-	name      string   `json:"name"`
-	types     string   `json:"type"`
-	dimension string   `json:"dimention"`
-	residents []string `json:"residents"`
+	id        int            `json:"id"`
+	name      string         `json:"name"`
+	types     string         `json:"type"`
+	dimension string         `json:"dimention"`
+	residents []residentList `json:"residents"`
 }
 
-func wheresRick() (string, error) {
+type residentList struct {
+	residents string
+}
+
+func wheresRick() string {
 
 	resp, err := http.Get("https://rickandmortyapi.com/api/location/2")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	jsresp, err := ioutil.ReadAll(jsresp.Body)
-	jsresp.Body.Close()
-	if err != nil {
-		return "", err
-	}
+	jsresp, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
 
-	l := []locationInfo{}
+	var l locationInfo
 
-	location, err := json.Unmarshal([]byte(jsresp), &l)
-	if err != nil {
-		return "", err
-	}
+	json.Unmarshal(jsresp, &l)
 
-	return string(location), nil
+	return string(l.name)
 }
 
 // RICK AND MORTY API END
 
 func main() {
 
-	globalConfig.textbeltKey = "xxxx"
+	globalConfig.textbeltKey = "textbelt"
 
 	phone := os.Args[1]
-	message, err := wheresRick()
+	message := wheresRick()
 
 	//send text message
 	sendText(phone, message)
