@@ -135,9 +135,15 @@ func wheresRick() (string, error) {
 		log.Fatal(err)
 	}
 
+	jsresp, err := ioutil.ReadAll(jsresp.Body)
+	jsresp.Body.Close()
+	if err != nil {
+		return "", err
+	}
+
 	l := []locationInfo{}
 
-	location, err := json.Unmarshal([]byte(resp), &l)
+	location, err := json.Unmarshal([]byte(jsresp), &l)
 	if err != nil {
 		return "", err
 	}
