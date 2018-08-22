@@ -52,10 +52,10 @@ type locationInfo struct {
 }
 
 type residentList struct {
-	residents string
+	residents []string
 }
 
-func wheresRick() (string, error) {
+func wheresRick() {
 
 	url := "https://rickandmortyapi.com/api/location/2"
 
@@ -65,29 +65,28 @@ func wheresRick() (string, error) {
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
-
 	if err != nil {
-		return "", err
+		fmt.Print(err)
 	}
 
-	var l locationInfo
+	var l interface{}
 
 	json.Unmarshal(body, &l)
 	fmt.Printf("Results: %v\n", l)
-
-	return string(l.name), err
+	os.Exit(0)
 }
 
 // RICK AND MORTY API END
 
 func main() {
 
-	globalConfig.textbeltKey = "textbelt"
+	//globalConfig.textbeltKey = "textbelt"
 
-	phone := os.Args[1]
-	message, _ := wheresRick()
-	fmt.Println(message)
+	//phone := os.Args[1]
+	//message, _ := wheresRick()
+	//fmt.Println(message)
 	//send text message
-	sendText(phone, message)
+	//sendText(phone, message)
 
+	wheresRick()
 }
