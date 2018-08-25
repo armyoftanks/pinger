@@ -71,7 +71,7 @@ func wheresRick() (string, error) {
 	var l locationInfo
 
 	json.Unmarshal(body, &l)
-	return "HackerQween News says Ricks current location is: " + string(l.Name), nil
+	return "HackerQween says Ricks current location is: " + string(l.Name), nil
 }
 
 // RICK AND MORTY API END
