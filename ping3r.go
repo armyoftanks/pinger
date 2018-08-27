@@ -47,7 +47,7 @@ type locationInfo struct {
 	Id        int      `json:"id"`
 	Name      string   `json:"name"`
 	Type      string   `json:"type"`
-	Dimension string   `json:"dimention"`
+	Dimension string   `json:"dimension"`
 	Residents []string `json:"residents"`
 	Url       string   `json:"url"`
 	Created   string   `json:"created"`
@@ -71,18 +71,36 @@ func wheresRick() (string, error) {
 	var l locationInfo
 
 	json.Unmarshal(body, &l)
-	return "HackerQween says Ricks current location is: " + string(l.Name), nil
+	return "HackerQween says Ricks current location is: " + string(l.Name) + ". In the dimention: " + string(l.Dimension), nil
 }
 
 // RICK AND MORTY API END
+
+// DICTIONARY API
+func defineWord(string) (strin, error) {
+	url := "DICTIONARY API URL HERE"
+
+	resp, err := http.POST(url)
+}
+
+// DICTIONARY API END
 
 func main() {
 
 	globalConfig.textbeltKey = "xxxx"
 
 	phone := os.Args[1]
-	message, _ := wheresRick()
-	fmt.Println(message)
-	sendText(phone, message)
+	word := os.Args[3]
+
+	switch os.Args[2] {
+	case "rick":
+		message, _ := wheresRick()
+		sendText(phone, message)
+		fmt.Println(message)
+	case "define":
+		message, _ := defineWord(word)
+		sendText(phone, message)
+		fmt.Println(message)
+	}
 
 }
