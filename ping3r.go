@@ -8,10 +8,6 @@ import (
 	"math/rand"
 	"net/http"
 	"net/url"
-<<<<<<< HEAD
-=======
-	"os"
->>>>>>> e207eb0ff7d9ae7229a93437579fd7b1e4cf1ba9
 	"time"
 )
 
@@ -79,7 +75,6 @@ func wheresRick() (string, error) {
 
 // RICK AND MORTY API END
 
-<<<<<<< HEAD
 /* DICTIONARY API
 func defineWord(string) (string, error) {
 	url := "DICTIONARY API URL HERE"
@@ -88,32 +83,15 @@ func defineWord(string) (string, error) {
 }
 
 DICTIONARY API END */
-=======
-// DICTIONARY API
-func defineWord(string) (strin, error) {
-	url := "DICTIONARY API URL HERE"
-
-	resp, err := http.POST(url)
-}
-
-// DICTIONARY API END
->>>>>>> e207eb0ff7d9ae7229a93437579fd7b1e4cf1ba9
 
 func main() {
 
 	globalConfig.textbeltKey = "xxxx"
 
-<<<<<<< HEAD
 	//phone := os.Args[1]
 	//word := os.Args[3]
 
 	/*switch os.Args[2] {
-=======
-	phone := os.Args[1]
-	word := os.Args[3]
-
-	switch os.Args[2] {
->>>>>>> e207eb0ff7d9ae7229a93437579fd7b1e4cf1ba9
 	case "rick":
 		message, _ := wheresRick()
 		sendText(phone, message)
@@ -121,11 +99,5 @@ func main() {
 	case "define":
 		message, _ := defineWord(word)
 		sendText(phone, message)
-		fmt.Println(message)
-<<<<<<< HEAD
-	} */
-=======
-	}
->>>>>>> e207eb0ff7d9ae7229a93437579fd7b1e4cf1ba9
-
+		fmt.Println(message) */
 }
