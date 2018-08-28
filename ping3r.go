@@ -1,0 +1,131 @@
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"log"
+	"math/rand"
+	"net/http"
+	"net/url"
+<<<<<<< HEAD
+=======
+	"os"
+>>>>>>> e207eb0ff7d9ae7229a93437579fd7b1e4cf1ba9
+	"time"
+)
+
+// Config (context) struct
+type appConfig struct {
+	textbeltKey string
+}
+
+// global config data
+var globalConfig *appConfig = &appConfig{}
+
+// TEXT BELT API HERE
+func sendText(phone string, message string) (string, error) {
+
+	resp, err := http.PostForm("https://textbelt.com/text", url.Values{"phone": {phone}, "message": {message}, "key": {globalConfig.textbeltKey}})
+	if err != nil {
+		return "", err
+	}
+
+	textbelt, err := ioutil.ReadAll(resp.Body)
+	resp.Body.Close()
+	if err != nil {
+		return "", err
+	}
+
+	log.Println(string(textbelt))
+
+	return string(textbelt), err
+}
+
+// TEXT BELT API END
+
+// RICK AND MORTY API HERE
+
+type locationInfo struct {
+	Id        int      `json:"id"`
+	Name      string   `json:"name"`
+	Type      string   `json:"type"`
+	Dimension string   `json:"dimension"`
+	Residents []string `json:"residents"`
+	Url       string   `json:"url"`
+	Created   string   `json:"created"`
+}
+
+func wheresRick() (string, error) {
+	rand.Seed(time.Now().Unix())
+	locationID := (rand.Int() % 76) + 1
+	url := fmt.Sprintf("https://rickandmortyapi.com/api/location/%d", locationID)
+
+	resp, err := http.Get(url)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	var l locationInfo
+
+	json.Unmarshal(body, &l)
+	return "HackerQween says Ricks current location is: " + string(l.Name) + ". In the dimention: " + string(l.Dimension), nil
+}
+
+// RICK AND MORTY API END
+
+<<<<<<< HEAD
+/* DICTIONARY API
+func defineWord(string) (string, error) {
+	url := "DICTIONARY API URL HERE"
+
+	resp, err := http.Post(url)
+}
+
+DICTIONARY API END */
+=======
+// DICTIONARY API
+func defineWord(string) (strin, error) {
+	url := "DICTIONARY API URL HERE"
+
+	resp, err := http.POST(url)
+}
+
+// DICTIONARY API END
+>>>>>>> e207eb0ff7d9ae7229a93437579fd7b1e4cf1ba9
+
+func main() {
+
+	globalConfig.textbeltKey = "xxxx"
+
+<<<<<<< HEAD
+	//phone := os.Args[1]
+	//word := os.Args[3]
+
+	/*switch os.Args[2] {
+=======
+	phone := os.Args[1]
+	word := os.Args[3]
+
+	switch os.Args[2] {
+>>>>>>> e207eb0ff7d9ae7229a93437579fd7b1e4cf1ba9
+	case "rick":
+		message, _ := wheresRick()
+		sendText(phone, message)
+		fmt.Println(message)
+	case "define":
+		message, _ := defineWord(word)
+		sendText(phone, message)
+		fmt.Println(message)
+<<<<<<< HEAD
+	} */
+=======
+	}
+>>>>>>> e207eb0ff7d9ae7229a93437579fd7b1e4cf1ba9
+
+}
