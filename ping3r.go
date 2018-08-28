@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"net/url"
-	"os"
+	"time"
 )
 
 // Config (context) struct
@@ -42,22 +43,19 @@ func sendText(phone string, message string) (string, error) {
 // RICK AND MORTY API HERE
 
 type locationInfo struct {
-	id        int            `json:"id"`
-	name      string         `json:"name"`
-	types     string         `json:"type"`
-	dimension string         `json:"dimention"`
-	residents []residentList `json:"residents"`
-	url       string         `json:"url"`
-	created   string         `json:"created"`
+	Id        int      `json:"id"`
+	Name      string   `json:"name"`
+	Type      string   `json:"type"`
+	Dimension string   `json:"dimension"`
+	Residents []string `json:"residents"`
+	Url       string   `json:"url"`
+	Created   string   `json:"created"`
 }
 
-type residentList struct {
-	residents []string
-}
-
-func wheresRick() {
-
-	url := "https://rickandmortyapi.com/api/location/2"
+func wheresRick() (string, error) {
+	rand.Seed(time.Now().Unix())
+	locationID := (rand.Int() % 76) + 1
+	url := fmt.Sprintf("https://rickandmortyapi.com/api/location/%d", locationID)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -69,24 +67,39 @@ func wheresRick() {
 		fmt.Print(err)
 	}
 
-	var l interface{}
+	var l locationInfo
 
 	json.Unmarshal(body, &l)
-	fmt.Printf("Results: %v\n", l)
-	os.Exit(0)
+	return "HackerQween says Ricks current location is: " + string(l.Name) + ". In the dimention: " + string(l.Dimension), nil
 }
 
 // RICK AND MORTY API END
 
+/* DICTIONARY API
+func defineWord(string) (string, error) {
+	url := "DICTIONARY API URL HERE"
+
+	resp, err := http.Post(url)
+}
+
+DICTIONARY API END */
+
 func main() {
 
-	//globalConfig.textbeltKey = "textbelt"
+	globalConfig.textbeltKey = "xxxx"
 
 	//phone := os.Args[1]
-	//message, _ := wheresRick()
-	//fmt.Println(message)
-	//send text message
-	//sendText(phone, message)
+	//word := os.Args[3]
 
-	wheresRick()
+	/*switch os.Args[2] {
+	case "rick":
+		message, _ := wheresRick()
+		sendText(phone, message)
+		fmt.Println(message)
+	case "define":
+		message, _ := defineWord(word)
+		sendText(phone, message)
+		fmt.Println(message)
+	} */
+
 }
